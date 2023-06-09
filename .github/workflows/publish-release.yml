@@ -23,8 +23,6 @@ jobs:
             dist: ubi9-minimal
           - jdk-version: 17
             dist: ubi9-minimal
-          - jdk-version: 20
-            dist: ubi9-minimal
     environment: quay.io
     runs-on: ubuntu-latest
     steps:
