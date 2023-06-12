@@ -17,15 +17,16 @@ jobs:
       JDK_VERSION_FOR_LATEST: 17
     strategy:
       matrix:
-        platform:
-          - linux/amd64
-          - linux/arm64
-          - linux/s390x
         include:
           - jdk-version: 11
             dist: ubi9-minimal
+            platforms: linux/amd64,linux/arm64,linux/s390x
           - jdk-version: 17
             dist: ubi9-minimal
+            platforms: linux/amd64,linux/arm64,linux/s390x
+          - jdk-version: 20
+            dist: ubi9-minimal
+            platforms: linux/amd64,linux/arm64
     environment: quay.io
     runs-on: ubuntu-latest
     steps:
@@ -59,7 +60,7 @@ jobs:
         uses: docker/build-push-action@v3.2.0
         with:
           push: true
-          platforms: linux/amd64,linux/arm64,linux/s390x
+          platforms: ${{ matrix.platforms}}
           build-args: |
             jdk=${{ matrix.jdk-version }}
             dist=${{ matrix.dist }}
