@@ -7,9 +7,7 @@ name: Build and push WildFly Docker images
 # secrets.REGISTRY_PASSWORD - the user password to authentication before pushing the image
 
 on:
-  push:
-    tags-ignore:
-      - "26*"
+  push
 
 jobs:
   image:
