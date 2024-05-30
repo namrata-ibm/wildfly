@@ -8,8 +8,6 @@ name: Build and push WildFly Docker images
 
 on:
   push:
-    tags-ignore:
-      - "26*"
 
 jobs:
   image:
@@ -21,10 +19,13 @@ jobs:
         include:
           - jdk-version: 11
             dist: centos7
+            platforms: linux/amd64,linux/arm64
           - jdk-version: 17
             dist: centos7
+            platforms: linux/amd64,linux/arm64
           - jdk-version: 21
             dist: ubi9-minimal
+            platforms: linux/amd64,linux/arm64,linux/s390x
     environment: quay.io
     runs-on: ubuntu-latest
     steps:
@@ -34,7 +35,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5.5.1
         with:
-          images: ${{ secrets.REGISTRY }}/${{ secrets.IMAGE }}
+          images: docker.io/docnam/wftest
           flavor: |
             latest=false
           tags: |
@@ -50,7 +51,7 @@ jobs:
       - name: Docker Login to Quay.io
         uses: docker/login-action@v3.1.0
         with:
-          registry: ${{ secrets.REGISTRY }}
+          registry: docker.io
           username: ${{ secrets.REGISTRY_USER }}
           password: ${{ secrets.REGISTRY_PASSWORD }}
       - name: Build and push JDK images
@@ -58,7 +59,7 @@ jobs:
         uses: docker/build-push-action@v5.3.0
         with:
           push: true
-          platforms: linux/amd64,linux/arm64
+          platforms: ${{ matrix.platforms}}
           build-args: |
             jdk=${{ matrix.jdk-version }}
             dist=${{ matrix.dist }}
